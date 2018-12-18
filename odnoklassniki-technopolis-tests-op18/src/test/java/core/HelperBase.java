@@ -1,7 +1,13 @@
 package core;
 
 import com.google.common.base.Preconditions;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class HelperBase {
     protected WebDriver driver;
     private boolean acceptNextAlert = true;
+    final int TIME_OUT = 10;
 
     public HelperBase(WebDriver driver) {
         this.driver = driver;
@@ -22,6 +29,10 @@ public abstract class HelperBase {
     protected void type(String text, By locator) {
         driver.findElement(locator).clear();
         driver.findElement(locator).sendKeys(text);
+    }
+
+    protected void pressEnter(){
+        driver.findElement(By.name("common-search")).sendKeys(Keys.ENTER);
     }
 
     protected void click(By locator) {
