@@ -27,7 +27,7 @@ public class LoginMainPage extends HelperBase {
     public UserMainPage doLogin(TestBot testBot) {
         type(testBot.getLogin(), EMAIL);
         type(testBot.getPassword(), PASSWORD);
-        click(ENTER_BUTTON);
+        Assert.assertTrue("Can not click to 'Log in' button", click(ENTER_BUTTON));
         return new UserMainPage(driver);
     }
 }

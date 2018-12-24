@@ -12,23 +12,18 @@ import java.util.List;
 import java.util.Random;
 
 public class MusicPage extends HelperBase {
-    private static final By MUSIC_BUTTON = By.xpath(
-        "//div[@class='toolbar_nav_i_tx-w usel-off'][contains(text(),'Музыка')]");
 
-    private final int THRESHOLD_TO_LOAD = 10;
-    private static final By MUSIC_PLAYER = By.xpath("//div[@id='music_layer_wrapper']");
-    private static final By SEARCH_FIELD = By.xpath("//input[@placeholder='Искать песни на сайте']");
-    private static final By SEARCH_BUTTON = By.xpath("//a[@class='vl_btn']");
-    private static final By MUSIC_LIST = By.xpath("//div[@class='mus-tr_lst']");
-    private static final By MUSICS = By.xpath("//*[@class='__cxq3lh']//wm-track[*]");
+    private static final By MUSIC_PLAYER = By.xpath("//div[@class='toolbar-music-layer']");
+    private static final By MUSICS = By.xpath("//main[@class='__cxq3lh']");
 
-    private static final By FOR_YOU_MENU = By.xpath("//*[contains(@class, '__vitrine')]");
-    private static final By MY_MUSIC_MENU = By.xpath("//*[contains(@class, '__library')]");
-    private static final By COLLECTION_MENU = By.xpath("//*[contains(@class, '__collections')]");
-    private static final By RADIO_MENU = By.xpath("//*[contains(@class, '__radio')]");
+    private static final By FOR_YOU_MENU = By.xpath("//div[contains(@class, '__vitrine')]");
+    private static final By MY_MUSIC_MENU = By.xpath("//div[contains(@class, '__library')]");
+    private static final By COLLECTION_MENU = By.xpath("//div[contains(@class, '__collections')]");
+    private static final By RADIO_MENU = By.xpath("//div[contains(@class, '__radio')]");
 
     private final List<MusicItem> musics;
     private static final By SEARCH_MUSIC = By.xpath("//input[@placeholder='Поиск']");
+    private static final By SEARCH = By.name("common-search");
 
     MusicPage(WebDriver driver) {
         super(driver);
@@ -61,7 +56,7 @@ public class MusicPage extends HelperBase {
 
     public MusicPage searchMusic(String music) {
         type(music, SEARCH_MUSIC);
-        pressEnter();
+        pressEnter(SEARCH);
         return this;
     }
 
@@ -70,31 +65,30 @@ public class MusicPage extends HelperBase {
     }
 
     public RadioPage selectRadio() {
-        driver.findElement(RADIO_MENU).click();
+        Assert.assertTrue("Can not click by Radio menu button", click(RADIO_MENU));
         return new RadioPage(driver);
     }
 
     public ForYouPage selectForYou() {
-        driver.findElement(FOR_YOU_MENU).click();
+        Assert.assertTrue("Can not click by Music button", click(FOR_YOU_MENU));
         return new ForYouPage(driver);
     }
 
     public MyMusic selectMyMusic() {
-        driver.findElement(MY_MUSIC_MENU).click();
+        Assert.assertTrue("Can not click by Music button", click(MY_MUSIC_MENU));
         return new MyMusic(driver);
     }
 
     public CollectionPage selectCollection() {
-        driver.findElement(COLLECTION_MENU).click();
+        Assert.assertTrue("Can not click by Music button", click(COLLECTION_MENU));
         return new CollectionPage(driver);
     }
 
     public static class RadioPage extends HelperBase {
 
-        private static final By RADIO_SECTION = By.tagName("wm-radio-section");
+        private static final By RADIO_SECTION = By.xpath("//*[contains(@class,'__60o4ct')]");
         private static final By RADIO_LIST = By.xpath("//wm-radio-station[*]");
-        private static final By PLAY_BUTTON = By.tagName("wm-button");
-        private static final By PLAY_BUTTON_2 = By.className("wm-button_icon");
+        private static final By PLAY_BUTTON = By.xpath("//wm-button[@class='__ekai4w']");
         private final List<WebElement> radioList;
         private WebElement playingElement;
 
@@ -115,6 +109,7 @@ public class MusicPage extends HelperBase {
 
         public RadioPage playRandom() {
             playingElement = radioList.get(new Random().nextInt(radioList.size() - 1)).findElement(PLAY_BUTTON);
+            Assert.assertTrue("Can not select the music", playingElement.isDisplayed());
             playingElement.click();
             return this;
         }
@@ -125,7 +120,7 @@ public class MusicPage extends HelperBase {
     }
 
     public static class ForYouPage extends HelperBase {
-        private static final By FOR_YOU = By.tagName("wm-vitrine-section");
+        private static final By FOR_YOU = By.xpath("//*[contains(text(),\"Сборники для вас\")]");
 
         public ForYouPage(WebDriver driver) {super(driver);}
 
@@ -141,7 +136,7 @@ public class MusicPage extends HelperBase {
     }
 
     public static class CollectionPage extends HelperBase {
-        private static final By COLLECTION = By.tagName("wm-collections-section");
+        private static final By COLLECTION = By.xpath("//*[contains(text(),'Сборники')]");
 
         public CollectionPage(WebDriver driver) {super(driver);}
 
@@ -157,7 +152,7 @@ public class MusicPage extends HelperBase {
 
     public static class MyMusic extends HelperBase {
 
-        private static final By MY_MUSIC = By.tagName("wm-library-section");
+        private static final By MY_MUSIC = By.xpath("//*[contains(text(),'Моя музыка')]");
 
         public MyMusic(WebDriver driver) {
             super(driver);

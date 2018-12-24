@@ -1,6 +1,7 @@
 package core;
 
 import com.google.common.base.Preconditions;
+import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -27,16 +28,25 @@ public abstract class HelperBase {
     protected abstract void check();
 
     protected void type(String text, By locator) {
-        driver.findElement(locator).clear();
-        driver.findElement(locator).sendKeys(text);
+        WebElement element = driver.findElement(locator);
+        Assert.assertTrue("Element must be selected", element.isDisplayed());
+        element.clear();
+        element.sendKeys(text);
     }
 
-    protected void pressEnter(){
-        driver.findElement(By.name("common-search")).sendKeys(Keys.ENTER);
+    protected void pressEnter(By locator) {
+        WebElement element = driver.findElement(locator);
+        Assert.assertTrue("Element must be selected", element.isDisplayed());
+        element.sendKeys(Keys.ENTER);
     }
 
-    protected void click(By locator) {
-        driver.findElement(locator).click();
+    protected boolean click(By locator) {
+        if (isElementPresent(locator)) {
+            WebElement element = driver.findElement(locator);
+            element.click();
+            return true;
+        }
+        return false;
     }
 
     protected void clickBy(By locator, int xOffSet, int yOffSet) {
@@ -89,9 +99,16 @@ public abstract class HelperBase {
     /**
      * Ожидание
      */
-    public boolean explicitWait(final ExpectedCondition<?> condition, long maxCheckTimeInSeconds, long millisecondsBetweenChecks) {
+    public boolean explicitWait(
+        final ExpectedCondition<?> condition,
+        long maxCheckTimeInSeconds,
+        long millisecondsBetweenChecks
+    ) {
         Preconditions.checkNotNull(condition, "Condition must be not null");
-        Preconditions.checkArgument(TimeUnit.MINUTES.toSeconds(3) > maxCheckTimeInSeconds, "Max check time in seconds should be less than 3 minutes");
+        Preconditions.checkArgument(
+            TimeUnit.MINUTES.toSeconds(3) > maxCheckTimeInSeconds,
+            "Max check time in seconds should be less than 3 minutes"
+        );
         checkConditionTimeouts(maxCheckTimeInSeconds, millisecondsBetweenChecks);
         try {
             // сбрасываем ожидания в 0
@@ -109,7 +126,8 @@ public abstract class HelperBase {
                 driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             } else {
                 throw new IllegalArgumentException("Driver shouldnt be null");
-            }        }
+            }
+        }
     }
 
     /**
@@ -124,11 +142,13 @@ public abstract class HelperBase {
     private void checkConditionTimeouts(long maxCheckTimeInSeconds, long millisecondsBetweenChecks) {
         Preconditions.checkState(maxCheckTimeInSeconds > 0, "maximum check time in seconds must be not 0");
         Preconditions.checkState(millisecondsBetweenChecks > 0, "milliseconds count between checks must be not 0");
-        Preconditions.checkState(millisecondsBetweenChecks < (maxCheckTimeInSeconds * 1000),
-                "Millis between checks must be less than max seconds to wait");
+        Preconditions.checkState(
+            millisecondsBetweenChecks < (maxCheckTimeInSeconds * 1000),
+            "Millis between checks must be less than max seconds to wait"
+        );
     }
 
-    public void moveToElement(WebElement webElement){
+    public void moveToElement(WebElement webElement) {
         new Actions(driver).moveToElement(webElement).build().perform();
     }
 }

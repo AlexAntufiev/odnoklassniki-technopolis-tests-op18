@@ -3,13 +3,20 @@ package core;
 import model.TestBot;
 import org.openqa.selenium.WebDriver;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class LoginBotFactory {
 
-    private static final String login = "89117539431";
-    private static final String password = "1z2x3c4v";
-
     public static UserMainPage getLoginMainPage(WebDriver driver) {
-        LoginMainPage loginMainPage = new LoginMainPage(driver);
-        return loginMainPage.doLogin(new TestBot(login, password));
+
+        Properties properties = new Properties();
+        try (InputStream inStream = LoginBotFactory.class.getClassLoader().getResourceAsStream("config.properties")) {
+            properties.load(inStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Can not read properties file", e);
+        }
+        return new LoginMainPage(driver).doLogin(new TestBot(properties.getProperty("login"), properties.getProperty("password")));
     }
 }

@@ -19,12 +19,12 @@ public class My4Test extends TestBase {
 
         Assert.assertNotNull(musicList);
         MusicItem musicItem = musicList.get(0);
-        Assert.assertEquals("play", musicItem.getState());
+        Assert.assertEquals(MusicItem.PAUSE_STATUS, musicItem.getState());
         musicItem.play();
         Thread.sleep(1500);
-        Assert.assertEquals("pause", musicItem.getState());
+        Assert.assertEquals(MusicItem.PLAY_STATUS, musicItem.getState());
         musicItem.play();
         Thread.sleep(1500);
-        Assert.assertEquals("play", musicItem.getState());
+        Assert.assertEquals(MusicItem.PAUSE_STATUS, musicItem.getState());
     }
 }

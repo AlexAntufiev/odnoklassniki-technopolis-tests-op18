@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class UserMainPage extends HelperBase {
     private static final By MUSIC_BUTTON = By.xpath("//div[contains(text(),'Музыка')]");
+    private static final By PANEL = By.xpath(".//*[@class=\"toolbar_nav\"]");
 
     public UserMainPage(WebDriver driver) {
         super(driver);
@@ -16,11 +17,11 @@ public class UserMainPage extends HelperBase {
     protected void check() {
         Assert.assertTrue(
             new WebDriverWait(driver, TIME_OUT)
-                .until((ExpectedCondition<Boolean>) webDriver -> isElementPresent(MUSIC_BUTTON)));
+                .until((ExpectedCondition<Boolean>) webDriver -> isElementVisible(PANEL)));
     }
 
     public MusicPage navigateToMusic() {
-        click(MUSIC_BUTTON);
+        Assert.assertTrue("Need click by Music button", click(MUSIC_BUTTON));
         return new MusicPage(driver);
     }
 }
