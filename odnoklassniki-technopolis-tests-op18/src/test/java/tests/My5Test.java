@@ -9,7 +9,7 @@ import org.junit.Test;
 public class My5Test extends TestBase {
 
     @Test
-    public void playRadio() throws InterruptedException {
+    public void playRadio() {
         MusicPage.RadioPage radio = LoginBotFactory
             .getLoginMainPage(driver)
             .navigateToMusic()
@@ -17,7 +17,6 @@ public class My5Test extends TestBase {
 
         Assert.assertFalse(radio.isPlay());
         radio.playRandom();
-        Thread.sleep(1500);
         Assert.assertTrue(radio.isPlay());
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class My4Test extends TestBase {
 
     @Test
-    public void playMusic() throws InterruptedException {
+    public void playMusic() {
         List<MusicItem> musicList = LoginBotFactory
             .getLoginMainPage(driver)
             .navigateToMusic()
@@ -19,12 +19,9 @@ public class My4Test extends TestBase {
 
         Assert.assertNotNull(musicList);
         MusicItem musicItem = musicList.get(0);
-        Assert.assertEquals(MusicItem.PAUSE_STATUS, musicItem.getState());
         musicItem.play();
-        Thread.sleep(1500);
-        Assert.assertEquals(MusicItem.PLAY_STATUS, musicItem.getState());
+        Assert.assertTrue(musicItem.isPlay());
         musicItem.play();
-        Thread.sleep(1500);
-        Assert.assertEquals(MusicItem.PAUSE_STATUS, musicItem.getState());
+        Assert.assertFalse(musicItem.isPlay());
     }
 }

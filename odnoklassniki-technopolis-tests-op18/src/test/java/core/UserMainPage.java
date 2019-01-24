@@ -7,8 +7,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class UserMainPage extends HelperBase {
-    private static final By MUSIC_BUTTON = By.xpath("//div[contains(text(),'Музыка')]");
-    private static final By PANEL = By.xpath(".//*[@class=\"toolbar_nav\"]");
+    private static final By MUSIC_BUTTON = By.xpath(".//*[contains(text(),'Музыка')]");
+    private static final By PANEL = By.xpath(".//*[@class='toolbar_nav']");
 
     public UserMainPage(WebDriver driver) {
         super(driver);

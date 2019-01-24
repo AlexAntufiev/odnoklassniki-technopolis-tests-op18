@@ -18,12 +18,12 @@ public class TestBase {
     protected WebDriver driver;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         init();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         stop();
     }
 

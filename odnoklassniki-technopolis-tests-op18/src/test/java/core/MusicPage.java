@@ -13,13 +13,14 @@ import java.util.Random;
 
 public class MusicPage extends HelperBase {
 
-    private static final By MUSIC_PLAYER = By.xpath("//div[@class='toolbar-music-layer']");
-    private static final By MUSICS = By.xpath("//main[@class='__cxq3lh']");
+    private static final By MUSIC_PLAYER = By.xpath(".//*[@class='toolbar-music-layer']");
+    private static final By MUSICS = By.xpath(".//*[@class='__cxq3lh']//wm-track");
+    private static final By MUSICS2 = By.xpath(".//*[contains(@class, 'wm-track_hld')]");
 
-    private static final By FOR_YOU_MENU = By.xpath("//div[contains(@class, '__vitrine')]");
-    private static final By MY_MUSIC_MENU = By.xpath("//div[contains(@class, '__library')]");
-    private static final By COLLECTION_MENU = By.xpath("//div[contains(@class, '__collections')]");
-    private static final By RADIO_MENU = By.xpath("//div[contains(@class, '__radio')]");
+    private static final By FOR_YOU_MENU = By.xpath("//*[contains(@class, '__vitrine')]");
+    private static final By MY_MUSIC_MENU = By.xpath("//*[contains(@class, '__library')]");
+    private static final By COLLECTION_MENU = By.xpath("//*[contains(@class, '__collections')]");
+    private static final By RADIO_MENU = By.xpath("//*[contains(@class, '__radio')]");
 
     private final List<MusicItem> musics;
     private static final By SEARCH_MUSIC = By.xpath("//input[@placeholder='Поиск']");
@@ -31,7 +32,7 @@ public class MusicPage extends HelperBase {
     }
 
     private List<MusicItem> getMusics(WebDriver driver) {
-        return Transformer.wrapMusicList(driver.findElements(MUSICS));
+        return Transformer.wrapMusicList(driver.findElements(MUSICS2), driver);
     }
 
     protected void check() {
@@ -43,14 +44,7 @@ public class MusicPage extends HelperBase {
     }
 
     public MusicPage playRandomMusic() {
-        musics.forEach(i -> {
-            i.play();
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+        musics.forEach(MusicItem::play);
         return this;
     }
 
@@ -111,6 +105,8 @@ public class MusicPage extends HelperBase {
             playingElement = radioList.get(new Random().nextInt(radioList.size() - 1)).findElement(PLAY_BUTTON);
             Assert.assertTrue("Can not select the music", playingElement.isDisplayed());
             playingElement.click();
+            new WebDriverWait(driver, TIME_OUT)
+                .until((ExpectedCondition<Boolean>) webDriver -> isPlay());
             return this;
         }
 
@@ -120,7 +116,7 @@ public class MusicPage extends HelperBase {
     }
 
     public static class ForYouPage extends HelperBase {
-        private static final By FOR_YOU = By.xpath("//*[contains(text(),\"Сборники для вас\")]");
+        private static final By FOR_YOU = By.xpath("//*[contains(text(),'Сборники для вас')]");
 
         public ForYouPage(WebDriver driver) {super(driver);}
 
